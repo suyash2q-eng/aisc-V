@@ -1,0 +1,50 @@
+Program 1: Find max / min|
+
+find_max(X, Y, X) :- X >= Y, !.
+find_max(X, Y, Y) :- X < Y.
+
+find_min(X, Y, X) :- X =< Y, !.
+find_min(X, Y, Y) :- X > Y.
+
+?- find_max(100, 200, Max).
+
+
+
+
+Program 2: Area of rectangle and Celsius to Fahrenheit
+
+area_rectangle(Length, Breadth, Area) :- Area is Length * Breadth.
+?- area_rectangle(5, 8, Area).
+
+celsius_to_fahrenheit(C, F) :- F is C * 9 / 5 + 32.
+?- celsius_to_fahrenheit(25, F).
+
+
+
+Program 3: Factorial
+
+factorial(0, 1).
+factorial(N, Result) :-
+    N > 0,
+    N_minus_1 is N - 1,
+    factorial(N_minus_1, SubResult),
+    Result is N * SubResult.
+
+?- factorial(5, F).
+
+
+Program 4: Facts and rules (friends)
+
+% Facts
+likes(john, pizza).
+likes(mary, pizza).
+likes(rahul, burger).
+
+% Rule
+friends(X, Y) :-
+    likes(X, pizza),
+    likes(Y, pizza),
+    X \= Y.
+
+?- friends(john, mary).
+
