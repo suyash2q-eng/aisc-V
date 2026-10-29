@@ -1,0 +1,140 @@
+EXPERIMENT NO. 4
+==============================
+AIM: To implement any one of the Informed search techniques, e.g. A* algorithm.
+
+--- Code 1: A* algorithm on a graph ---
+
+def astar(start, goal):
+    open_set = {start}
+    closed_set = set()
+    g = {start: 0}
+    parents = {start: None}
+
+    while open_set:
+        current = min(open_set, key=lambda x: g[x] + heuristic(x))
+
+        if current == goal:
+            path = []
+            while current:
+                path.append(current)
+                current = parents[current]
+            path.reverse()
+            print("Shortest path:", path)
+            print("Total cost:", g[goal])
+            return
+
+        open_set.remove(current)
+        closed_set.add(current)
+
+        neighbors = graph.get(current, [])
+        for neighbor, cost in neighbors:
+            if neighbor in closed_set:
+                continue
+            new_cost = g[current] + cost
+            if neighbor not in open_set or new_cost < g.get(neighbor, float('inf')):
+                g[neighbor] = new_cost
+                parents[neighbor] = current
+                open_set.add(neighbor)
+
+    print("No path found.")
+
+
+# Heuristic values (estimated cost to goal)
+def heuristic(node):
+    h = {
+        'A': 11,
+        'B': 6,
+        'C': 99,
+        'D': 1,
+        'E': 7,
+        'G': 0,
+    }
+    return h.get(node, float('inf'))
+
+
+# Graph definition
+graph = {
+    'A': [('B', 2), ('E', 3)],
+    'B': [('C', 1), ('G', 9)],
+    'C': [],
+    'E': [('D', 6)],
+    'D': [('G', 1)],
+}
+
+# Run the search
+astar('A', 'G')
+
+
+--- Code 2: A* algorithm for 8 puzzle problem ---
+
+def h(state, goal):
+    # Manhattan distance
+    distance = 0
+    for i in range(9):
+        if state[i] != 0:
+            j = goal.index(state[i])
+            distance += abs(i // 3 - j // 3)
+            distance += abs(i % 3 - j % 3)
+    return distance
+
+
+def get_neighbors(state):
+    neighbors = []
+    zero = state.index(0)
+    row = zero // 3
+    col = zero % 3
+    moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+    for dr, dc in moves:
+        r = row + dr
+        c = col + dc
+        if 0 <= r < 3 and 0 <= c < 3:
+            new = state[:]
+            new_zero = r * 3 + c
+            new[zero], new[new_zero] = new[new_zero], new[zero]
+            neighbors.append(new)
+    return neighbors
+
+
+def astar(start, goal):
+    open_list = [(h(start, goal), 0, start, [start])]
+    visited = []
+
+    while open_list:
+        # Choose state with smallest f = g + h
+        open_list.sort()
+        f, g, state, path = open_list.pop(0)
+
+        if state == goal:
+            return path
+
+        if state in visited:
+            continue
+        visited.append(state)
+
+        for neighbor in get_neighbors(state):
+            if neighbor not in visited:
+                new_g = g + 1
+                new_f = new_g + h(neighbor, goal)
+                open_list.append((new_f, new_g, neighbor, path + [neighbor]))
+    return None
+
+
+# Initial state
+start = [1, 2, 3,
+         4, 0, 6,
+         7, 5, 8]
+
+# Goal state
+goal = [1, 2, 3,
+        4, 5, 6,
+        7, 8, 0]
+
+path = astar(start, goal)
+
+# Print solution
+for step in path:
+    print(step[0:3])
+    print(step[3:6])
+    print(step[6:9])
+    print()

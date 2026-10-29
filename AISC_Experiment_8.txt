@@ -1,0 +1,139 @@
+EXPERIMENT NO. 8
+==============================
+AIM: To implement basic Supervised / Unsupervised Neural Network learning rules
+for a problem.
+
+Working (Delta Rule):
+For each training pattern:
+Step 1: Calculate the neuron output      y = w1*x1 + w2*x2 + b
+Step 2: Calculate error                  e = t - y
+Step 3: Update weights                   wi = wi + eta * e * xi
+Step 4: Update bias                      b = b + eta * e
+Step 5: Repeat for multiple epochs until the error becomes small.
+
+Example:
+x = [1, 1], t = 1. Initially w1 = w2 = 0, b = 0
+y = (0)(1) + (0)(1) + 0 = 0
+e = 1 - 0 = 1
+For eta = 0.1:
+w1 = 0 + (0.1)(1)(1) = 0.1
+w2 = 0 + (0.1)(1)(1) = 0.1
+b  = 0 + (0.1)(1)    = 0.1
+Thus, the weights are gradually modified so that the predicted output
+approaches the target output.
+
+--- Code 1: Delta Learning Rule ---
+
+import numpy as np
+
+# Input patterns
+X = np.array([
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+])
+
+# Target output for AND gate
+T = np.array([0, 0, 0, 1])
+
+# Learning rate
+eta = 0.1
+
+# Initialize weights and bias
+weights = np.zeros(2)
+bias = 0
+
+# Number of epochs
+epochs = 20
+
+# Delta Learning Rule
+for epoch in range(epochs):
+    total_error = 0
+
+    for x, t in zip(X, T):
+        # Calculate actual output
+        y = np.dot(weights, x) + bias
+
+        # Calculate error
+        error = t - y
+
+        # Update weights
+        weights = weights + eta * error * x
+
+        # Update bias
+        bias = bias + eta * error
+
+        total_error += error ** 2
+
+    print(f"Epoch {epoch + 1}: MSE = {total_error / len(X):.4f}")
+
+# Display final weights
+print("\nFinal Weights:", weights)
+print("Final Bias:", bias)
+
+# Test the trained network
+print("\nPredictions:")
+for x in X:
+    y = np.dot(weights, x) + bias
+    print(x, "->", round(y, 3))
+
+
+--- Code 2: Hebbian Learning Rule ---
+
+import numpy as np
+
+# Bipolar input patterns for OR gate
+X = np.array([
+    [-1, -1],
+    [-1,  1],
+    [ 1, -1],
+    [ 1,  1]
+])
+
+# Bipolar target outputs
+T = np.array([-1, 1, 1, 1])
+
+# Learning rate
+eta = 1
+
+# Initialize weights and bias
+weights = np.zeros(2)
+bias = 0
+
+print("Initial Weights:", weights)
+print("Initial Bias:", bias)
+
+# Hebbian Learning
+for x, t in zip(X, T):
+    # Calculate output
+    net = np.dot(weights, x) + bias
+    if net >= 0:
+        y = 1
+    else:
+        y = -1
+
+    # Update weights
+    weights = weights + eta * x * t
+
+    # Update bias
+    bias = bias + eta * t
+
+    print("\nInput:", x)
+    print("Target:", t)
+    print("Output:", y)
+    print("Updated Weights:", weights)
+    print("Updated Bias:", bias)
+
+print("\nFinal Weights:", weights)
+print("Final Bias:", bias)
+
+# Test the network
+print("\nTesting:")
+for x in X:
+    net = np.dot(weights, x) + bias
+    if net >= 0:
+        y = 1
+    else:
+        y = -1
+    print(x, "->", y)

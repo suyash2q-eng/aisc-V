@@ -1,0 +1,34 @@
+EXPERIMENT NO. 5
+==============================
+AIM: Implement adversarial search using min-max algorithm.
+
+Code:
+
+import math
+
+# Minimax function for a game tree
+def minimax(depth, node_index, is_max, scores, height):
+    # If we reach a leaf node, return its score
+    if depth == height:
+        return scores[node_index]
+
+    if is_max:  # Maximizer's move
+        return max(
+            minimax(depth + 1, node_index * 2, False, scores, height),
+            minimax(depth + 1, node_index * 2 + 1, False, scores, height)
+        )
+    else:  # Minimizer's move
+        return min(
+            minimax(depth + 1, node_index * 2, True, scores, height),
+            minimax(depth + 1, node_index * 2 + 1, True, scores, height)
+        )
+
+
+# Example game tree (leaf scores)
+scores = [3, 5, 6, 9, 1, 2, 0, -1]
+
+# Tree height = log2(len(scores))
+height = int(math.log2(len(scores)))
+
+best_score = minimax(0, 0, True, scores, height)
+print("The optimal value is:", best_score)

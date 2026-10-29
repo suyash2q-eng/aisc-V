@@ -1,0 +1,79 @@
+EXPERIMENT NO. 7
+==============================
+AIM: Train a perceptron to learn AND, OR, XOR gates.
+
+Code:
+
+import numpy as np
+
+# Perceptron function
+def train_perceptron(X, y, epochs=10, learning_rate=0.1):
+    weights = np.zeros(X.shape[1])
+    bias = 0
+
+    for epoch in range(epochs):
+        for i in range(len(X)):
+            # Weighted sum
+            z = np.dot(X[i], weights) + bias
+
+            # Step activation function
+            prediction = 1 if z >= 0 else 0
+
+            # Error
+            error = y[i] - prediction
+
+            # Update weights and bias
+            weights = weights + learning_rate * error * X[i]
+            bias = bias + learning_rate * error
+
+    return weights, bias
+
+
+# Input combinations
+X = np.array([
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+])
+
+# AND gate
+AND = np.array([0, 0, 0, 1])
+
+# OR gate
+OR = np.array([0, 1, 1, 1])
+
+# XOR gate
+XOR = np.array([0, 1, 1, 0])
+
+
+# Function to test the trained perceptron
+def test_perceptron(X, weights, bias):
+    predictions = []
+    for x in X:
+        z = np.dot(x, weights) + bias
+        prediction = 1 if z >= 0 else 0
+        predictions.append(prediction)
+    return predictions
+
+
+# Train AND
+w_and, b_and = train_perceptron(X, AND)
+print("AND Gate")
+print("Weights:", w_and)
+print("Bias:", b_and)
+print("Output:", test_perceptron(X, w_and, b_and))
+
+# Train OR
+w_or, b_or = train_perceptron(X, OR)
+print("\nOR Gate")
+print("Weights:", w_or)
+print("Bias:", b_or)
+print("Output:", test_perceptron(X, w_or, b_or))
+
+# Train XOR
+w_xor, b_xor = train_perceptron(X, XOR)
+print("\nXOR Gate")
+print("Weights:", w_xor)
+print("Bias:", b_xor)
+print("Output:", test_perceptron(X, w_xor, b_xor))

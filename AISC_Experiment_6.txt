@@ -1,0 +1,96 @@
+EXPERIMENT NO. 6
+==============================
+AIM: Creating/building a neural network using basic language using C Programming.
+
+Code:
+
+#include <stdio.h>
+
+int main()
+{
+    // AND gate input
+    int input[4][2] = {
+        {0, 0},
+        {0, 1},
+        {1, 0},
+        {1, 1}
+    };
+
+    // Expected output
+    int target[4] = {0, 0, 0, 1};
+
+    // Initial weights and bias
+    float w1 = 0.0;
+    float w2 = 0.0;
+    float bias = 0.0;
+    float learning_rate = 0.1;
+    int epochs = 10;
+
+    // Training
+    for (int epoch = 0; epoch < epochs; epoch++)
+    {
+        printf("Epoch %d\n", epoch + 1);
+
+        for (int i = 0; i < 4; i++)
+        {
+            // Calculate weighted sum
+            float sum = (input[i][0] * w1) +
+                        (input[i][1] * w2) +
+                        bias;
+
+            // Activation function
+            int output;
+            if (sum >= 1.0)
+                output = 1;
+            else
+                output = 0;
+
+            // Calculate error
+            int error = target[i] - output;
+
+            // Update weights and bias
+            w1 = w1 + learning_rate * error * input[i][0];
+            w2 = w2 + learning_rate * error * input[i][1];
+            bias = bias + learning_rate * error;
+
+            printf("Input: %d %d | Target: %d | Output: %d | Error: %d\n",
+                   input[i][0],
+                   input[i][1],
+                   target[i],
+                   output,
+                   error);
+            printf("\n");
+        }
+
+        printf("w1 = %.2f\n", w1);
+        printf("w2 = %.2f\n", w2);
+        printf("bias = %.2f\n", bias);
+    }
+
+    // Testing
+    printf("Final AND Gate Results:\n");
+    for (int i = 0; i < 4; i++)
+    {
+        float sum = (input[i][0] * w1) +
+                    (input[i][1] * w2) +
+                    bias;
+
+        int output;
+        if (sum >= 1.0)
+            output = 1;
+        else
+            output = 0;
+
+        printf("%d AND %d = %d\n",
+               input[i][0],
+               input[i][1],
+               output);
+    }
+
+    printf("\nFinal weights:\n");
+    printf("w1 = %.2f\n", w1);
+    printf("w2 = %.2f\n", w2);
+    printf("bias = %.2f\n", bias);
+
+    return 0;
+}
